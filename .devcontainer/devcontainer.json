@@ -8,7 +8,8 @@
 			"extensions": [
 				"ms-python.python",
 				"GitHub.copilot",
-				"GitHub.copilot-chat"
+				"GitHub.copilot-chat",
+				"ms-python.autopep8"
 			]
 		}
 	}
