@@ -10,7 +10,7 @@ def main() -> None:
     )
 
     parser.add_argument(
-        'options', choices=['init', 'chat'], 
+        'options', choices=['init', 'chat'],
         help="'init': initialize the app. 'chat': chat with the AI"
     )
 
@@ -18,8 +18,9 @@ def main() -> None:
 
     if args.options == 'init':
         print('Initializing the app...')
-        config_init() # TODO: Implement this function
+        config_init()  # TODO: Implement this function
         sys.exit()
+
 
 if __name__ == '__main__':
     main()
