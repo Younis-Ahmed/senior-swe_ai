@@ -9,7 +9,8 @@
 				"ms-python.python",
 				"GitHub.copilot",
 				"GitHub.copilot-chat",
-				"ms-python.autopep8"
+				"ms-python.autopep8",
+				"ms-python.pylint"
 			]
 		}
 	}
