@@ -1,6 +1,7 @@
 """ SeniorSWE cli tool utilize AI to help you with your project """
 from argparse import ArgumentParser, Namespace
 import sys
+from senior_swe_ai.conf import config_init
 
 
 def main() -> None:
@@ -18,7 +19,7 @@ def main() -> None:
 
     if args.options == 'init':
         print('Initializing the app...')
-        config_init()  # TODO: Implement this function
+        config_init()
         sys.exit()
 
 

@@ -7,6 +7,9 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.10"
+inquirer = "^3.2.4"
+openai = "^1.14.0"
+toml = "^0.10.2"
 
 
 [tool.poetry.group.dev.dependencies]
