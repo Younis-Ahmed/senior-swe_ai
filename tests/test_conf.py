@@ -1,8 +1,12 @@
 """ Test the conf module """
 from typing import Any, Generator
+import os
 import pytest
 from pytest_mock import MockerFixture
-from senior_swe_ai.conf import *
+from senior_swe_ai.conf import (
+    get_config_path,
+    config_init
+)
 
 
 class TestConf:
