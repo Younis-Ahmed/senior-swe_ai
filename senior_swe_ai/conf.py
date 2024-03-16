@@ -25,7 +25,9 @@ def get_config_path() -> str:
 
 def config_init() -> None:
     """ Initialize the app """
+
     conf_file_path: str = get_config_path()
+
     if os.path.exists(conf_file_path):
         print('The app has already been initialized')
         questions: list[Confirm] = [
@@ -36,12 +38,17 @@ def config_init() -> None:
 
         if not answers['overwrite']:
             return
+
     os.makedirs(os.path.dirname(conf_file_path), exist_ok=True)
 
     try:
+
         api_key: str = os.environ['OPENAI_API_KEY']
+
     except KeyError:
+
         api_validate = False
+
         while api_validate is False:
             api_key: str = getpass.getpass('Enter your OpenAI API key: ')
             api_validate: bool = validate_api_key(api_key)
