@@ -2,7 +2,7 @@
 from typing import Any, Generator
 import os
 import pytest
-from pytest_mock import MockerFixture
+from pytest_mock import MockFixture, MockerFixture
 from senior_swe_ai.conf import (
     get_config_path,
     config_init
@@ -60,8 +60,9 @@ class TestConf:
         """Test config_init env var not exists"""
         mocker.patch('os.path.exists', return_value=False)
         mocker.patch.dict('os.environ', {}, clear=True)
-        mock_getpass = mocker.patch('getpass.getpass', return_value='test_key')
-        mock_api_validate = mocker.patch(
+        mock_getpass: MockFixture = mocker.patch(
+            'getpass.getpass', return_value='test_key')
+        mock_api_validate: MockFixture = mocker.patch(
             'senior_swe_ai.conf.validate_api_key', return_value=True)
 
         config_init()
