@@ -25,25 +25,33 @@ def get_config_path() -> str:
 
 def config_init() -> None:
     """ Initialize the app """
+
     conf_file_path: str = get_config_path()
+
     if os.path.exists(conf_file_path):
         print('The app has already been initialized')
         questions: list[Confirm] = [
-            Confirm('overwrite', message='Do you want to overwrite the configuration?')
+            Confirm('overwrite',
+                    message='Do you want to overwrite the configuration?')
         ]
         answers: dict[Any, Any] | None = prompt(questions)
 
         if not answers['overwrite']:
             return
+
     os.makedirs(os.path.dirname(conf_file_path), exist_ok=True)
-    client = openai.OpenAI()
+
     try:
+
         api_key: str = os.environ['OPENAI_API_KEY']
+
     except KeyError:
+
         api_validate = False
+
         while api_validate is False:
             api_key: str = getpass.getpass('Enter your OpenAI API key: ')
-            api_validate: bool = validate_api_key(api_key, client)
+            api_validate: bool = validate_api_key(api_key)
             if api_validate is False:
                 print('Invalid API key. Please try again.')
     conf: dict[Any, Any] = {
@@ -53,19 +61,22 @@ def config_init() -> None:
     save_conf(conf)
 
 
-def validate_api_key(api_key: str, openai_inst) -> bool:
+def validate_api_key(api_key: str) -> bool:
     """ Validate the OpenAI API key"""
-    openai.api_key = api_key
 
     try:
         # Make a simple request to the API
-        openai_inst.embeddings.create(
+        client = openai.OpenAI()
+        openai.api_key = api_key
+        client.embeddings.create(
             input="A test request to validate the API key",
             model="text-embedding-ada-002"
         )
         return True
     except openai.AuthenticationError:
         # If an AuthenticationError is raised, the API key is invalid
+        return False
+    except openai.OpenAIError:
         return False
 
 
