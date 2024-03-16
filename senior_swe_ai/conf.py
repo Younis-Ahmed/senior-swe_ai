@@ -87,6 +87,13 @@ def save_conf(conf) -> None:
         toml.dump(conf, conf_file)
 
 
+def append_conf(conf: dict[Any, Any]) -> None:
+    """ Append the configuration to the file """
+    conf_file_path: str = get_config_path()
+    with open(conf_file_path, 'a', encoding='utf-8') as conf_file:
+        toml.dump(conf, conf_file)
+
+
 def load_conf() -> dict[Any, Any]:
     """ Load the configuration from the file """
     conf_file_path: str = get_config_path()
