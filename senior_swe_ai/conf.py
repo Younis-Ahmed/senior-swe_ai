@@ -5,7 +5,8 @@ import getpass
 from typing import Any
 import openai
 import toml
-from inquirer import Confirm, prompt
+from inquirer import Confirm, prompt, List
+from senior_swe_ai.consts import EmbeddingsModel
 
 
 def get_config_path() -> str:
@@ -54,9 +55,25 @@ def config_init() -> None:
             api_validate: bool = validate_api_key(api_key)
             if api_validate is False:
                 print('Invalid API key. Please try again.')
-    conf: dict[Any, Any] = {
+
+    question: list[Confirm] = [
+        List(
+            'embed_model',
+            message='Choose the embeddings model',
+            choices=[
+                EmbeddingsModel.OPENAI_TEXT_EMBEDDING_ADA_002.value,
+                EmbeddingsModel.OPENAI_TEXT_EMBEDDING_3_SMALL.value
+            ],
+            default=EmbeddingsModel.OPENAI_TEXT_EMBEDDING_ADA_002.value
+        ),
+    ]
+    answers: dict[str, str] = prompt(question)
+
+    conf: dict[str, str] = {
         'api_key': api_key,
-        'username': get_username()
+        'username': get_username(),
+        'embed_model': answers['embed_model'],
+        'chat_model': 'gpt-3.5-turbo'
     }
     save_conf(conf)
 
@@ -84,6 +101,13 @@ def save_conf(conf) -> None:
     """ Save the configuration to the file """
     conf_file_path: str = get_config_path()
     with open(conf_file_path, 'w', encoding='utf-8') as conf_file:
+        toml.dump(conf, conf_file)
+
+
+def append_conf(conf: dict[Any, Any]) -> None:
+    """ Append the configuration to the file """
+    conf_file_path: str = get_config_path()
+    with open(conf_file_path, 'a', encoding='utf-8') as conf_file:
         toml.dump(conf, conf_file)
 
 
