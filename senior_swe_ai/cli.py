@@ -1,9 +1,9 @@
 """ SeniorSWE cli tool utilize AI to help you with your project """
 from argparse import ArgumentParser, Namespace
 import sys
-from typing import Any
 from senior_swe_ai.git_process import is_git_repo, get_repo_name, get_repo_root
 from senior_swe_ai.conf import config_init, load_conf, append_conf
+from senior_swe_ai.cache import create_cache_dir
 
 
 def main() -> None:
@@ -34,11 +34,13 @@ def main() -> None:
     append_conf({'repo_name': repo_name, 'repo_root': repo_root})
 
     try:
-        conf: dict[Any, Any] = load_conf()
+        conf: dict[str, str] = load_conf()
     except FileNotFoundError:
         config_init()
         append_conf({'repo_name': repo_name, 'repo_root': repo_root})
         conf = load_conf()
+
+    create_cache_dir()
 
 
 if __name__ == '__main__':
