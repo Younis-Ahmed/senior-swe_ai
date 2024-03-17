@@ -56,7 +56,9 @@ def config_init() -> None:
                 print('Invalid API key. Please try again.')
     conf: dict[Any, Any] = {
         'api_key': api_key,
-        'username': get_username()
+        'username': get_username(),
+        'embed_model': 'text-embedding-ada-002',
+        'chat_model': 'gpt-3.5-turbo'
     }
     save_conf(conf)
 
