@@ -12,6 +12,11 @@ from senior_swe_ai.cache import create_cache_dir, get_cache_path
 
 def main() -> None:
     """ __main__ """
+    py_version: tuple[int, int] = sys.version_info[:2]
+    if py_version < (3, 9) or py_version > (3, 12):
+        print('This app requires Python ^3.9.x or >3.12.x')
+        sys.exit(1)
+
     parser = ArgumentParser(
         description='SeniorSWE cli tool utilize AI to help you with your project'
     )
@@ -52,7 +57,6 @@ def main() -> None:
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
         # all files in the git repository
         files: list[str] = recursive_load_files()
-        
 
 
 if __name__ == '__main__':
