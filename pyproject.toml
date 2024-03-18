@@ -13,6 +13,10 @@ toml = "^0.10.2"
 esprima = "^4.0.1"
 tree-sitter = "^0.21.0"
 tree-sitter-languages = "^1.10.2"
+langchain = "^0.1.12"
+langchain-community = "^0.0.28"
+langchain-text-splitters = "^0.0.1"
+langchain-openai = "^0.0.8"
 
 
 [tool.poetry.group.dev.dependencies]
