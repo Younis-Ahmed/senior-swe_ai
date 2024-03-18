@@ -11,6 +11,7 @@ from senior_swe_ai.git_process import (
 )
 from senior_swe_ai.conf import config_init, load_conf, append_conf
 from senior_swe_ai.cache import create_cache_dir, get_cache_path
+from senior_swe_ai.llm_handler import get_langchain_text_splitters
 
 
 def main() -> None:
@@ -60,15 +61,15 @@ def main() -> None:
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
         # all files in the git repository tree
         files: list[str] = recursive_load_files()
-        ext_arr = []
+        # ext_arr = []
         for file in files:
             ext: str = get_extension(file)
-            ext_arr.append(ext)
+            # ext_arr.append(ext)
             loader: GenericLoader = GenericLoader.from_filesystem(
                 file,
                 glob="*/[!.]*",
-                suffixes=set(ext_arr),
-                parser=LanguageParser(language=)
+                suffixes=ext,
+                parser=LanguageParser(language=get_langchain_text_splitters(ext))
             )
             
 
