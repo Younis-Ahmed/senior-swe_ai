@@ -55,9 +55,9 @@ def main() -> None:
         model=conf['embed_model'], api_key=conf['api_key'])
 
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
-        # all files in the git repository
+        # all files in the git repository tree
         files: list[str] = recursive_load_files()
-
+        
 
 if __name__ == '__main__':
     main()
