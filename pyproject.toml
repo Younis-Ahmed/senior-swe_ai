@@ -17,6 +17,7 @@ langchain = "^0.1.12"
 langchain-community = "^0.0.28"
 langchain-text-splitters = "^0.0.1"
 langchain-openai = "^0.0.8"
+tiktoken = "^0.6.0"
 
 
 [tool.poetry.group.dev.dependencies]
