@@ -59,7 +59,7 @@ def main() -> None:
         model=conf['embed_model'], api_key=conf['api_key'])
 
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
-        # all files in the git repository tree
+        # all desired files in the git repository tree
         files: list[str] = recursive_load_files()
         # ext_arr = []
         for file in files:
@@ -69,9 +69,10 @@ def main() -> None:
                 file,
                 glob="*/[!.]*",
                 suffixes=ext,
-                parser=LanguageParser(language=get_langchain_text_splitters(ext))
+                parser=LanguageParser(
+                    language=get_langchain_text_splitters(ext))
             )
-            
+
 
 if __name__ == '__main__':
     main()
