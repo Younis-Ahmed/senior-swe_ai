@@ -7,8 +7,8 @@ from langchain_core.documents.base import Document
 from langchain_openai import OpenAIEmbeddings
 from langchain_community.document_loaders.generic import GenericLoader
 from langchain_community.document_loaders.parsers.language.language_parser import LanguageParser
-from langchain_text_splitters import Language, RecursiveCharacterTextSplitter
-from senior_swe_ai.file_handler import get_extension
+from langchain_text_splitters import RecursiveCharacterTextSplitter
+from senior_swe_ai.file_handler import get_extension, parse_code_files
 from senior_swe_ai.git_process import (
     is_git_repo, get_repo_name, get_repo_root, recursive_load_files
 )
@@ -64,22 +64,8 @@ def main() -> None:
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
         # all desired files in the git repository tree
         files: list[str] = recursive_load_files()
-
-        exts: set = {get_extension(file) for file in files}
-        loader: GenericLoader = GenericLoader.from_filesystem(
-            repo_root,
-            glob="*/[!.]*",
-            suffixes=list(exts),
-            parser=LanguageParser()
-        )
-        docs: List[Document] = loader.load()
-
-        text_splitter: RecursiveCharacterTextSplitter = RecursiveCharacterTextSplitter(
-            chunk_size=1000,
-            chunk_overlap=100,
-
-        )
-        text: List[Document] = text_splitter.split_documents(docs)
+        docs: List[Document] = parse_code_files(files)
+        
 
 
 
