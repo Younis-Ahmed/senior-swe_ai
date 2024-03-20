@@ -63,7 +63,7 @@ class Treesitter(ABC):
     def _query_all_methods(
         self,
         node: tree_sitter.Node,
-    ):
+    ) -> list:
         methods = []
         if node.type == self.method_declaration_identifier:
             doc_comment_node = None
@@ -71,14 +71,14 @@ class Treesitter(ABC):
                 node.prev_named_sibling
                 and node.prev_named_sibling.type == self.doc_comment_identifier
             ):
-                doc_comment_node = node.prev_named_sibling.text.decode()
+                doc_comment_node: str = node.prev_named_sibling.text.decode()
             methods.append({"method": node, "doc_comment": doc_comment_node})
         else:
             for child in node.children:
                 methods.extend(self._query_all_methods(child))
         return methods
 
-    def _query_method_name(self, node: tree_sitter.Node):
+    def _query_method_name(self, node: tree_sitter.Node) -> str | None:
         if node.type == self.method_declaration_identifier:
             for child in node.children:
                 if child.type == self.method_name_identifier:
