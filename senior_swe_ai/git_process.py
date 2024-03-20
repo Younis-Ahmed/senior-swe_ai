@@ -42,3 +42,12 @@ def recursive_load_files() -> list[str]:
                     file_list.append(os.path.join(root, file))
 
     return file_list
+
+def get_hash(file_path: str) -> str:
+    """ Get the hash of the file """
+    return subprocess.run(
+        ["git", "log", "-1", "--pretty=format:%H", file_path],
+        capture_output=True,
+        check=True,
+        text=True,
+    ).stdout.strip()
