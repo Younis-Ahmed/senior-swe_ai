@@ -9,7 +9,7 @@ from langchain.schema import Document
 from langchain_community.vectorstores.faiss import FAISS as faiss
 from langchain_core.vectorstores import VectorStoreRetriever
 
-from senior_swe_ai.cache import VectorCache, get_cache_path
+from senior_swe_ai.cache import VectorCache, get_cache_path, load_vec_cache
 
 
 class VectorStore:
@@ -55,3 +55,14 @@ class VectorStore:
     def similarity_search(self, query: str) -> List[Document]:
         """Search for similar documents to the given query"""
         return self.db.similarity_search(query, k=4)
+
+    def load_docs(self):
+        """ Load the documents from the cache """
+        with open(os.path.join(get_cache_path(), f"{self.name}.faiss"), "rb") as f:
+            idx: bytes = f.read()
+        self.db = faiss.deserialize_from_bytes(idx, self.embed_mdl)
+        self.vec_cache: Dict[str, VectorCache] = load_vec_cache(
+            f'{self.name}.json')
+        self.retrieval = self.db.as_retriever(
+            search_type="mmr", search_kwargs={"k": 8}
+        )
