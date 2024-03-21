@@ -3,6 +3,8 @@ from argparse import ArgumentParser, Namespace
 import os
 import sys
 from typing import List
+from langchain.memory import ConversationSummaryMemory
+from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
 import pkg_resources
 import inquirer
 from langchain_core.documents.base import Document
@@ -61,6 +63,8 @@ def main() -> None:
     embed_mdl = OpenAIEmbeddings(
         model=conf['embed_model'], api_key=conf['api_key'])
 
+    vec_store = VectorStore(embed_mdl, repo_name)
+
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
         try:
             pkg_resources.get_distribution('faiss')
@@ -98,9 +102,16 @@ def main() -> None:
         # all desired files in the git repository tree
         files: list[str] = recursive_load_files()
         docs: List[Document] = parse_code_files(files)
-        vec_store = VectorStore(embed_mdl, repo_name)
         vec_store.idx_docs(docs)
         save_vec_cache(vec_store.vec_cache, f'{repo_name}.json')
+
+    vec_store.load_docs()
+
+    mem = ConversationSummaryMemory(
+        llm=conf['chat_model'], memory_key='chat_history', return_messages=True
+    )
+    qa = ConversationalRetrievalChain(
+        conf['chat_model'], retriever=vec_store.retrieval, memory=mem)
 
 
 if __name__ == '__main__':
