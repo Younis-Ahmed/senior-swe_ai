@@ -42,6 +42,6 @@ def get_langchain_language(language: Language) -> text_splitter.Language | None:
         Language.CPP: text_splitter.Language.CPP,
         Language.C_SHARP: text_splitter.Language.CSHARP,
         Language.RUBY: text_splitter.Language.RUBY,
-        Language.HASKELL: None,  # TODO: Add Haskell support
+        Language.HASKELL: None,  # : Add Haskell support
     }
     return lang_map.get(language, None)
