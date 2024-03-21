@@ -2,9 +2,8 @@
 vector store for storing embeddings and their 
 metadata, to enable fast search and retrieval
 """
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Dict, List
 import os
-import inquirer
 from langchain.schema import Document
 from langchain_community.vectorstores.faiss import FAISS as faiss
 from langchain_core.vectorstores import VectorStoreRetriever
