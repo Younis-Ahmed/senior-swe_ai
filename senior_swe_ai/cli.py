@@ -3,18 +3,18 @@ from argparse import ArgumentParser, Namespace
 import os
 import sys
 from typing import List
+import pkg_resources
+import inquirer
 from langchain_core.documents.base import Document
 from langchain_openai import OpenAIEmbeddings
-from langchain_community.document_loaders.generic import GenericLoader
-from langchain_community.document_loaders.parsers.language.language_parser import LanguageParser
-from langchain_text_splitters import RecursiveCharacterTextSplitter
-from senior_swe_ai.file_handler import get_extension, parse_code_files
+from senior_swe_ai.file_handler import parse_code_files
 from senior_swe_ai.git_process import (
     is_git_repo, get_repo_name, get_repo_root, recursive_load_files
 )
 from senior_swe_ai.conf import config_init, load_conf, append_conf
-from senior_swe_ai.cache import create_cache_dir, get_cache_path
-from senior_swe_ai.llm_handler import get_langchain_text_splitters
+from senior_swe_ai.cache import create_cache_dir, get_cache_path, save_vec_cache
+from senior_swe_ai.vec_store import VectorStore
+from senior_swe_ai.consts import FaissModel
 
 
 def main() -> None:
@@ -62,11 +62,45 @@ def main() -> None:
         model=conf['embed_model'], api_key=conf['api_key'])
 
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
+        try:
+            pkg_resources.get_distribution('faiss')
+        except pkg_resources.DistributionNotFound:
+            question = [
+                inquirer.List(
+                    'install',
+                    message='FAISS is not installed. Do you want to install it?',
+                    choices=['Yes', 'No'],
+                    default='Yes'
+                )
+            ]
+            answer: dict[str, str] = inquirer.prompt(question)
+            if answer['install'] == 'Yes':
+                question = [
+                    inquirer.List(
+                        "faiss-installation",
+                        message="Please select the appropriate option to install FAISS. \
+                            Use gpu if your system supports CUDA",
+                        choices=[
+                            FaissModel.FAISS_CPU,
+                            FaissModel.FAISS_GPU,
+                        ],
+                        default=FaissModel.FAISS_CPU,
+                    )
+                ]
+                answer: dict[str, str] = inquirer.prompt(question)
+                if answer['faiss-installation'] == 'faiss-cpu':
+                    os.system('pip install faiss-cpu')
+                else:
+                    os.system('pip install faiss-gpu')
+            else:
+                print('FAISS is required for this app to work')
+                sys.exit(1)
         # all desired files in the git repository tree
         files: list[str] = recursive_load_files()
         docs: List[Document] = parse_code_files(files)
-        
-
+        vec_store = VectorStore(embed_mdl, repo_name)
+        vec_store.idx_docs(docs)
+        save_vec_cache(vec_store.vec_cache, f'{repo_name}.json')
 
 
 if __name__ == '__main__':
