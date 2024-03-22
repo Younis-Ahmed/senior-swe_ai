@@ -85,10 +85,10 @@ def main() -> None:
                         message="Please select the appropriate option to install FAISS. \
                             Use gpu if your system supports CUDA",
                         choices=[
-                            FaissModel.FAISS_CPU,
-                            FaissModel.FAISS_GPU,
+                            FaissModel.FAISS_CPU.value,
+                            FaissModel.FAISS_GPU.value,
                         ],
-                        default=FaissModel.FAISS_CPU,
+                        default=FaissModel.FAISS_CPU.value,
                     )
                 ]
                 answer: dict[str, str] = inquirer.prompt(question)
@@ -112,6 +112,28 @@ def main() -> None:
     )
     qa = ConversationalRetrievalChain(
         conf['chat_model'], retriever=vec_store.retrieval, memory=mem)
+
+    try:
+        continue_chat = True
+        while continue_chat:
+            question: str = input(conf['username'] + ': ')
+            answer = qa(question)
+            print(repo_name + ': ' + answer)
+
+            choice: str = (
+                input(
+                    '[C]ontinue chatting, [R]eset chat history, or [Q]uit? '
+                ).strip().upper()
+            )
+            if choice == 'C':
+                continue
+            if choice == 'R':
+                mem.clear()
+                continue
+            if choice == 'Q':
+                continue_chat = False
+    except KeyboardInterrupt:
+        print('✌')
 
 
 if __name__ == '__main__':
