@@ -7,7 +7,7 @@ from langchain.memory import ConversationSummaryMemory
 from langchain.chains.conversational_retrieval.base import (
     BaseConversationalRetrievalChain, ConversationalRetrievalChain
 )
-import pkg_resources
+from importlib.metadata import distribution, PackageNotFoundError
 import inquirer
 from langchain_core.documents.base import Document
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
@@ -48,8 +48,8 @@ def main() -> None:
         print('The current directory is not a git repository')
         sys.exit(1)
 
-    repo_name: str = get_repo_name()
-    repo_root: str = get_repo_root()
+    repo_name: str = get_repo_name().upper()
+    repo_root: str = get_repo_root().upper()
 
     append_conf({'repo_name': repo_name, 'repo_root': repo_root})
 
@@ -69,8 +69,8 @@ def main() -> None:
 
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
         try:
-            pkg_resources.get_distribution('faiss')
-        except pkg_resources.DistributionNotFound:
+            distribution('faiss')
+        except PackageNotFoundError:
             question = [
                 inquirer.List(
                     'install',
