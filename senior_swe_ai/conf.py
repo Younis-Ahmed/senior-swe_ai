@@ -71,7 +71,7 @@ def config_init() -> None:
 
     conf: dict[str, str] = {
         'api_key': api_key,
-        'username': get_username(),
+        'username': get_username().upper(),
         'embed_model': answers['embed_model'],
         'chat_model': 'gpt-3.5-turbo'
     }
