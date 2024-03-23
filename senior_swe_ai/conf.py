@@ -52,7 +52,7 @@ def config_init() -> None:
 
         while api_validate is False:
             api_key: str = getpass.getpass('Enter your OpenAI API key: ')
-            api_validate: bool = validate_api_key(api_key)
+            api_validate: bool = validate_api_key(api_key.strip())
             if api_validate is False:
                 print('Invalid API key. Please try again.')
 
@@ -83,17 +83,19 @@ def validate_api_key(api_key: str) -> bool:
 
     try:
         # Make a simple request to the API
-        client = openai.OpenAI()
-        openai.api_key = api_key
+        client = openai.OpenAI(api_key=api_key)
+        # openai.api_key = api_key
         client.embeddings.create(
             input="A test request to validate the API key",
             model="text-embedding-ada-002"
         )
         return True
-    except openai.AuthenticationError:
+    except openai.AuthenticationError as e:
         # If an AuthenticationError is raised, the API key is invalid
+        print(f"AuthenticationError: {e}")
         return False
-    except openai.OpenAIError:
+    except openai.OpenAIError as e:
+        print(f"OpenAIError: {e}")
         return False
 
 
