@@ -14,7 +14,7 @@ def get_extension(file_path: str) -> str:
     """Get the file extension from the file path"""
     return '.' + file_path.split('.')[-1]
 
-
+# TODO (senior_swe_ai): Add type hints, fix none return type
 def parse_code_files(code_files: list[str]) -> list[Document]:
     """Parse the given code files and return a list of Documents"""
     documents: list = []
