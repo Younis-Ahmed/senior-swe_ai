@@ -9,7 +9,7 @@ from senior_swe_ai.consts import Language
 from senior_swe_ai.tree_parser.tree_parser_registry import TreesitterRegistry
 
 
-class TreesitterMethodNode:
+class TreesitterMethodNode:  # pylint: disable=too-few-public-methods
     """Class to represent a method node in the tree-sitter parse tree."""
 
     def __init__(
@@ -40,6 +40,7 @@ class Treesitter(ABC):
         self.method_declaration_identifier: str = method_declaration_identifier
         self.method_name_identifier: str = name_identifier
         self.doc_comment_identifier: str = doc_comment_identifier
+        self.tree: tree_sitter.Tree | None = None
 
     @staticmethod
     def create_treesitter(lang: Language) -> Any:
@@ -52,7 +53,7 @@ class Treesitter(ABC):
         result = []
         methods = self._query_all_methods(self.tree.root_node)
         for method in methods:
-            method_name = self._query_method_name(method["method"])
+            method_name: str | None = self._query_method_name(method["method"])
             doc_comment = method["doc_comment"]
             result.append(
                 TreesitterMethodNode(
