@@ -49,7 +49,7 @@ def main() -> None:
         sys.exit(1)
 
     repo_name: str = get_repo_name().upper()
-    repo_root: str = get_repo_root().upper()
+    repo_root: str = get_repo_root()
 
     append_conf({'repo_name': repo_name, 'repo_root': repo_root})
 
