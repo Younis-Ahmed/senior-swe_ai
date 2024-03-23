@@ -49,7 +49,6 @@ def main() -> None:
     repo_name: str = get_repo_name()
     repo_root: str = get_repo_root()
 
-    # TODO: Fix duplicate config
     append_conf({'repo_name': repo_name, 'repo_root': repo_root})
 
     try:
