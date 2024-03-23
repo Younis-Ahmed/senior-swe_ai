@@ -14,12 +14,12 @@ def get_extension(file_path: str) -> str:
     """Get the file extension from the file path"""
     return '.' + file_path.split('.')[-1]
 
-# TODO (senior_swe_ai): Add type hints, fix none return type
+
 def parse_code_files(code_files: list[str]) -> list[Document]:
     """Parse the given code files and return a list of Documents"""
     documents: list = []
     for code_file in code_files:
-        file_bytes, commit_hash, programming_language = read_file_and_get_metadata(
+        file_bytes, commit_hash, programming_language, file_extension = read_file_and_get_metadata(
             code_file)
         if programming_language is None:
             continue
@@ -30,7 +30,9 @@ def parse_code_files(code_files: list[str]) -> list[Document]:
             file_bytes, programming_language)
 
         documents.extend(create_documents_from_nodes(
-            treesitter_nodes, code_file, commit_hash, code_splitter, programming_language))
+            treesitter_nodes, code_file, commit_hash,
+            code_splitter, programming_language, file_extension
+        ))
 
     return documents
 
@@ -45,7 +47,7 @@ def read_file_and_get_metadata(code_file: str) -> Tuple[bytes, str, Optional[Lan
         programming_language: Language | None = get_langchain_text_splitters(
             file_extension)
 
-    return file_bytes, commit_hash, programming_language
+    return file_bytes, commit_hash, programming_language, file_extension
 
 
 def parse_file_with_treesitter(
@@ -65,7 +67,8 @@ def create_documents_from_nodes(
         code_file: str,
         commit_hash: str,
         code_splitter: RecursiveCharacterTextSplitter,
-        programming_language: Language
+        programming_language: Language,
+        extension: str
 ) -> list[Document]:
     """Create documents from the Treesitter nodes and return them as a list"""
     documents: list = []
@@ -88,6 +91,8 @@ def create_documents_from_nodes(
                     "filename": filename,
                     "method_name": node.name,
                     "commit_hash": commit_hash,
+                    'language': programming_language,
+                    'extension': extension,
                 },
             )
             documents.append(document)
@@ -104,7 +109,4 @@ def create_character_text_splitter(language: Language) -> RecursiveCharacterText
             chunk_size=512,
             chunk_overlap=128,
         )
-    return RecursiveCharacterTextSplitter(
-        chunk_size=512,
-        chunk_overlap=128,
-    )
+    return None
