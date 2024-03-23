@@ -4,11 +4,13 @@ import os
 import sys
 from typing import List
 from langchain.memory import ConversationSummaryMemory
-from langchain.chains.conversational_retrieval.base import ConversationalRetrievalChain
+from langchain.chains.conversational_retrieval.base import (
+    BaseConversationalRetrievalChain, ConversationalRetrievalChain
+)
 import pkg_resources
 import inquirer
 from langchain_core.documents.base import Document
-from langchain_openai import OpenAIEmbeddings
+from langchain_openai import OpenAIEmbeddings, ChatOpenAI
 from senior_swe_ai.file_handler import parse_code_files
 from senior_swe_ai.git_process import (
     is_git_repo, get_repo_name, get_repo_root, recursive_load_files
@@ -106,19 +108,20 @@ def main() -> None:
         save_vec_cache(vec_store.vec_cache, f'{repo_name}.json')
 
     vec_store.load_docs()
-
+    chat_mdl = ChatOpenAI(model=conf['chat_model'], api_key=conf['api_key'], temperature=0.9,
+                          max_tokens=2048)
     mem = ConversationSummaryMemory(
-        llm=conf['chat_model'], memory_key='chat_history', return_messages=True
+        llm=chat_mdl, memory_key='chat_history', return_messages=True
     )
-    qa = ConversationalRetrievalChain(
-        conf['chat_model'], retriever=vec_store.retrieval, memory=mem)
+    qa: BaseConversationalRetrievalChain = ConversationalRetrievalChain.from_llm(
+        chat_mdl, retriever=vec_store.retrieval, memory=mem)
 
     try:
         continue_chat = True
         while continue_chat:
             question: str = input(conf['username'] + ': ')
             answer = qa(question)
-            print(repo_name + ': ' + answer)
+            print(repo_name + ': ' + answer['answer'])
 
             choice: str = (
                 input(
@@ -133,7 +136,7 @@ def main() -> None:
             if choice == 'Q':
                 continue_chat = False
     except KeyboardInterrupt:
-        print('✌')
+        print('\n✌')
 
 
 if __name__ == '__main__':
