@@ -3,11 +3,11 @@ from argparse import ArgumentParser, Namespace
 import os
 import sys
 from typing import List
+from importlib.metadata import distribution, PackageNotFoundError
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains.conversational_retrieval.base import (
     BaseConversationalRetrievalChain, ConversationalRetrievalChain
 )
-from importlib.metadata import distribution, PackageNotFoundError
 import inquirer
 from langchain_core.documents.base import Document
 from langchain_openai import OpenAIEmbeddings, ChatOpenAI
