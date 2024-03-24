@@ -52,7 +52,7 @@ def config_init() -> None:
 
         while api_validate is False:
             api_key: str = getpass.getpass('Enter your OpenAI API key: ')
-            api_validate: bool = validate_api_key(api_key)
+            api_validate: bool = validate_api_key(api_key.strip())
             if api_validate is False:
                 print('Invalid API key. Please try again.')
 
@@ -71,7 +71,7 @@ def config_init() -> None:
 
     conf: dict[str, str] = {
         'api_key': api_key,
-        'username': get_username(),
+        'username': get_username().upper(),
         'embed_model': answers['embed_model'],
         'chat_model': 'gpt-3.5-turbo'
     }
@@ -83,17 +83,19 @@ def validate_api_key(api_key: str) -> bool:
 
     try:
         # Make a simple request to the API
-        client = openai.OpenAI()
-        openai.api_key = api_key
+        client = openai.OpenAI(api_key=api_key)
+        # openai.api_key = api_key
         client.embeddings.create(
             input="A test request to validate the API key",
             model="text-embedding-ada-002"
         )
         return True
-    except openai.AuthenticationError:
+    except openai.AuthenticationError as e:
         # If an AuthenticationError is raised, the API key is invalid
+        print(f"AuthenticationError: {e}")
         return False
-    except openai.OpenAIError:
+    except openai.OpenAIError as e:
+        print(f"OpenAIError: {e}")
         return False
 
 
@@ -107,16 +109,26 @@ def save_conf(conf) -> None:
 def append_conf(conf: dict[Any, Any]) -> None:
     """ Append the configuration to the file """
     conf_file_path: str = get_config_path()
-    with open(conf_file_path, 'a', encoding='utf-8') as conf_file:
-        toml.dump(conf, conf_file)
+    conf_item: dict[Any, Any] = load_conf()
+
+    # Update the existing configuration with the new configuration
+    conf_item.update(conf)
+
+    # Write the updated configuration back to the file
+    with open(conf_file_path, 'w', encoding='utf-8') as conf_file:
+        toml.dump(conf_item, conf_file)
 
 
 def load_conf() -> dict[Any, Any]:
     """ Load the configuration from the file """
     conf_file_path: str = get_config_path()
-    with open(conf_file_path, 'r', encoding='utf-8') as conf_file:
-        conf: dict[Any, Any] = toml.load(conf_file)
-    return conf
+    try:
+        with open(conf_file_path, 'r', encoding='utf-8') as conf_file:
+            conf: dict[Any, Any] = toml.load(conf_file)
+            return conf
+    except FileNotFoundError as e:
+        raise FileNotFoundError(
+            'Configuration file not found, `init` the app first.') from e
 
 
 def get_username() -> str:
