@@ -1,23 +1,26 @@
-"""This module contains the TreesitterC class, which is responsible for 
+"""This module contains the TreeParserC class, which is responsible for 
 parsing C code using the tree-sitter library."""
+import warnings
 import tree_sitter
 from senior_swe_ai.consts import Language
-from senior_swe_ai.tree_parser.base import Treesitter
-from senior_swe_ai.tree_parser.tree_parser_registry import TreesitterRegistry
+from senior_swe_ai.tree_parser.base import BaseTreeParser
+from senior_swe_ai.tree_parser.tree_parser_registry import TreeParserRegistry
 
 
-class TreesitterC(Treesitter):
+class TreeParserC(BaseTreeParser):
     """Class to parse C code using the tree-sitter library."""
 
-    def __init__(self):
-        super().__init__(Language.C, "function_definition", "identifier", "comment")
+    def __init__(self) -> None:
+        with warnings.catch_warnings():
+            warnings.simplefilter("ignore")
+            super().__init__(Language.C, "function_definition", "identifier", "comment")
 
-    def _query_method_name(self, node: tree_sitter.Node):
+    def _query_method_name(self, node: tree_sitter.Node) -> str | None:
         if node.type == self.method_declaration_identifier:
             for child in node.children:
                 # if method returns pointer, skip pointer declarator
                 if child.type == "pointer_declarator":
-                    child = child.children[1]
+                    child: tree_sitter.Node = child.children[1]
                 if child.type == "function_declarator":
                     for child in child.children:
                         if child.type == self.method_name_identifier:
@@ -25,4 +28,4 @@ class TreesitterC(Treesitter):
         return None
 
 
-TreesitterRegistry.register_treesitter(Language.C, TreesitterC)
+TreeParserRegistry.register_treesitter(Language.C, TreeParserC)
