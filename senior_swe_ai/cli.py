@@ -3,7 +3,6 @@ from argparse import ArgumentParser, Namespace
 import os
 import sys
 from typing import List
-from importlib.metadata import distribution, PackageNotFoundError
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains.conversational_retrieval.base import (
     BaseConversationalRetrievalChain, ConversationalRetrievalChain
@@ -18,7 +17,7 @@ from senior_swe_ai.git_process import (
 from senior_swe_ai.conf import config_init, load_conf, append_conf
 from senior_swe_ai.cache import create_cache_dir, get_cache_path, save_vec_cache
 from senior_swe_ai.vec_store import VectorStore
-from senior_swe_ai.consts import FaissModel
+from senior_swe_ai.consts import FaissModel, faiss_installed
 
 
 def main() -> None:
@@ -34,7 +33,7 @@ def main() -> None:
 
     parser.add_argument(
         'options', choices=['init', 'chat'],
-        help="'init': initialize the app. 'chat': chat with the AI"
+        help="'init': initialize the app. 'chat': chat with desired codebase."
     )
 
     args: Namespace = parser.parse_args()
@@ -68,9 +67,8 @@ def main() -> None:
     vec_store = VectorStore(embed_mdl, repo_name)
 
     if not os.path.exists(get_cache_path() + f'/{repo_name}.faiss'):
-        try:
-            distribution('faiss')
-        except PackageNotFoundError:
+        is_faiss_installed: bool = faiss_installed()
+        if not is_faiss_installed:
             question = [
                 inquirer.List(
                     'install',
