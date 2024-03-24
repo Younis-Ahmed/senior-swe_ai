@@ -1,22 +1,24 @@
 """Base class for tree-sitter parsers."""
 from abc import ABC
+from dataclasses import dataclass
 from typing import Any
 
 import tree_sitter
 from tree_sitter_languages import get_language, get_parser
 
 from senior_swe_ai.consts import Language
-from senior_swe_ai.tree_parser.tree_parser_registry import TreesitterRegistry
+from senior_swe_ai.tree_parser.tree_parser_registry import TreeParserRegistry
 
 
-class TreesitterMethodNode:  # pylint: disable=too-few-public-methods
+@dataclass
+class TreeParserMethodNode:
     """Class to represent a method node in the tree-sitter parse tree."""
 
     def __init__(
         self,
-        name: "str | bytes | None",
-        doc_comment: "str | None",
-        method_source_code: "str | None",
+        name: str | bytes | None,
+        doc_comment: str | None,
+        method_source_code: str | None,
         node: tree_sitter.Node,
     ) -> None:
         self.name: str | bytes | None = name
@@ -25,7 +27,7 @@ class TreesitterMethodNode:  # pylint: disable=too-few-public-methods
         self.node: tree_sitter.Node = node
 
 
-class Treesitter(ABC):
+class BaseTreeParser(ABC):
     """ Base class for tree-sitter parsers."""
 
     def __init__(
@@ -45,9 +47,9 @@ class Treesitter(ABC):
     @staticmethod
     def create_treesitter(lang: Language) -> Any:
         """Factory method to create a tree-sitter parser for the given language."""
-        return TreesitterRegistry.create_treesitter(lang)
+        return TreeParserRegistry.create_treesitter(lang)
 
-    def parse(self, file_bytes: bytes) -> list[TreesitterMethodNode]:
+    def parse(self, file_bytes: bytes) -> list[TreeParserMethodNode]:
         """Parse the given file and return a list of method nodes."""
         self.tree = self.parser.parse(file_bytes)
         result = []
@@ -56,7 +58,7 @@ class Treesitter(ABC):
             method_name: str | None = self._query_method_name(method["method"])
             doc_comment = method["doc_comment"]
             result.append(
-                TreesitterMethodNode(
+                TreeParserMethodNode(
                     method_name, doc_comment, None, method["method"])
             )
         return result
