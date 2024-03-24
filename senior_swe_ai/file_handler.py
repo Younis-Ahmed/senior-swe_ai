@@ -7,7 +7,7 @@ from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain_text_splitters import Language
 from senior_swe_ai.git_process import get_hash
 from senior_swe_ai.llm_handler import get_langchain_language, get_langchain_text_splitters
-from senior_swe_ai.tree_parser.base import Treesitter, TreesitterMethodNode
+from senior_swe_ai.tree_parser.base import BaseTreeParser, TreeParserMethodNode
 
 
 def get_extension(file_path: str) -> str:
@@ -26,7 +26,7 @@ def parse_code_files(code_files: list[str]) -> list[Document]:
 
         code_splitter: RecursiveCharacterTextSplitter = create_character_text_splitter(
             programming_language)
-        treesitter_nodes: List[TreesitterMethodNode] = parse_file_with_treesitter(
+        treesitter_nodes: List[TreeParserMethodNode] = parse_file_with_treesitter(
             file_bytes, programming_language)
 
         documents.extend(create_documents_from_nodes(
@@ -53,24 +53,24 @@ def read_file_and_get_metadata(code_file: str) -> Tuple[bytes, str, Optional[Lan
 def parse_file_with_treesitter(
         file_bytes: bytes,
         programming_language: Language
-) -> list[TreesitterMethodNode]:
-    """Parse the file using Treesitter and return the method nodes"""
-    treesitter_parser = Treesitter.create_treesitter(programming_language)
-    treesitter_nodes: list[TreesitterMethodNode] = treesitter_parser.parse(
+) -> list[TreeParserMethodNode]:
+    """Parse the file using BaseTreeParser and return the method nodes"""
+    treesitter_parser = BaseTreeParser.create_treesitter(programming_language)
+    treesitter_nodes: list[TreeParserMethodNode] = treesitter_parser.parse(
         file_bytes)
 
     return treesitter_nodes
 
 
 def create_documents_from_nodes(
-        treesitter_nodes: list[TreesitterMethodNode],
+        treesitter_nodes: list[TreeParserMethodNode],
         code_file: str,
         commit_hash: str,
         code_splitter: RecursiveCharacterTextSplitter,
         programming_language: Language,
         extension: str
 ) -> list[Document]:
-    """Create documents from the Treesitter nodes and return them as a list"""
+    """Create documents from the BaseTreeParser nodes and return them as a list"""
     documents: list = []
     for node in treesitter_nodes:
         method_source_code = node.method_source_code
