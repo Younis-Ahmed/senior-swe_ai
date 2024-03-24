@@ -1,5 +1,6 @@
 """ Holds all constants for the project. """
 from enum import Enum
+from importlib.metadata import distribution, PackageNotFoundError
 
 
 class Language(Enum):
@@ -140,3 +141,14 @@ INCLUDE_FILES: list[str] = [
     ".hs",
     ".rb",
 ]
+
+
+def faiss_installed() -> bool:
+    """Check if faiss is installed."""
+    for pack in FaissModel:
+        try:
+            distribution(pack.value)
+            return True
+        except PackageNotFoundError:
+            continue
+    return False
