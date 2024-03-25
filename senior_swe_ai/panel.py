@@ -5,6 +5,7 @@ It uses the rich library to create panels.
 from rich.panel import Panel
 from rich.console import Console
 from rich.columns import Columns
+from rich.align import Align
 
 
 class PanelBase:
@@ -28,15 +29,18 @@ class PanelBase:
         """Cache the content of the chatbox."""
         self._queue.enqueue(content)
 
-    def create_chatbox(self, title, content, width=50, is_ai=True):
+    def create_chatbox(self, title, content, width=150, is_ai=True):
         """Create a chatbox panel."""
         if not is_ai:
             chatbox = Panel.fit(content, width=width,
                                 title=title, border_style="blue")
+            aligned_chatbox = Align.left(chatbox)
         else:
             chatbox = Panel.fit(content, width=width,
                                 title=title, border_style="green")
-        self._cache_content(chatbox)
+            aligned_chatbox = Align.right(chatbox)
+
+        self._cache_content(aligned_chatbox)
         return chatbox
 
     def print_stdout(self):
@@ -79,4 +83,3 @@ if __name__ == "__main__":
         ai = input("AI: ")
         panel.create_chatbox("AI", ai)
         panel.print_stdout()
-    
