@@ -48,7 +48,7 @@ class PanelBase:
     def print_stdout(self):
         """Print the panel."""
         if self._queue.size() > 0:
-            self.console.print(self._create_base_panel(), soft_wrap=True)
+            self.console.print(self._create_base_panel())
 
 
 class Queue:
