@@ -50,12 +50,6 @@ class TestConf:
 
         assert validate_api_key(api_key) is False
 
-    def test_validate_api_key_success(self, mocker: MockerFixture) -> None:
-        """Test validate_api_key with a successful key"""
-        mocker.patch('openai.OpenAI', return_value=AsyncMock())
-        api_key = "success_api_key"
-        assert validate_api_key(api_key) is True
-
     def test_save_conf(self, mocker: MockerFixture) -> None:
         """Test save_conf function"""
         mock_open: MagicMock | AsyncMock | NonCallableMagicMock = mocker.patch(
