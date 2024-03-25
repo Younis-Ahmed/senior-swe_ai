@@ -31,7 +31,7 @@ class PanelBase:
         """Cache the content of the chatbox."""
         self._queue.enqueue(content)
 
-    def create_chatbox(self, title, content, width=100, is_ai=True) -> Panel:
+    def create_chatbox(self, title: str, content: str, width=100, is_ai=True) -> Panel:
         """Create a chatbox panel."""
         content = Text(content, overflow="fold")
         if not is_ai:
