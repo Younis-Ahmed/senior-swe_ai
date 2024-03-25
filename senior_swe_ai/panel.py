@@ -32,7 +32,7 @@ class PanelBase:
 
     def create_chatbox(self, title, content, width=100, is_ai=True):
         """Create a chatbox panel."""
-        content = Text(content, no_wrap=False)
+        content = Text(content, overflow="fold")
         if not is_ai:
             chatbox = Panel.fit(content, width=width,
                                 title=title, border_style="blue")
