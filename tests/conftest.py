@@ -6,7 +6,7 @@ from pytest_mock import MockerFixture
 from senior_swe_ai.conf import get_config_path
 
 
-@pytest.fixture(autouse=True)
+@pytest.fixture
 def setup_class(
     mocker: Generator[MockerFixture, None, None]
 ) -> Generator[None, Any, None]:
