@@ -35,11 +35,11 @@ class PanelBase:
         content = Text(content, overflow="fold")
         if not is_ai:
             chatbox = Panel.fit(content, width=width,
-                                title=title, border_style="blue")
+                                title=title, border_style="blue", title_align="left")
             aligned_chatbox = Align.left(chatbox, width=50)
         else:
             chatbox = Panel.fit(content, width=width,
-                                title=title, border_style="green")
+                                title=title, border_style="green", title_align="right")
             aligned_chatbox = Align.right(chatbox, width=50)
 
         self._cache_content(aligned_chatbox)
