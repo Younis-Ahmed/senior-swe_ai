@@ -36,11 +36,11 @@ class PanelBase:
         if not is_ai:
             chatbox = Panel.fit(content, width=width,
                                 title=title, border_style="blue")
-            aligned_chatbox = Align.left(chatbox)
+            aligned_chatbox = Align.left(chatbox, width=50)
         else:
             chatbox = Panel.fit(content, width=width,
                                 title=title, border_style="green")
-            aligned_chatbox = Align.right(chatbox)
+            aligned_chatbox = Align.right(chatbox, width=50)
 
         self._cache_content(aligned_chatbox)
         return chatbox
