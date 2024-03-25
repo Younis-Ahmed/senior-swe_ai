@@ -6,6 +6,7 @@ from rich.panel import Panel
 from rich.console import Console
 from rich.columns import Columns
 from rich.align import Align
+from rich.text import Text
 
 
 class PanelBase:
@@ -29,8 +30,9 @@ class PanelBase:
         """Cache the content of the chatbox."""
         self._queue.enqueue(content)
 
-    def create_chatbox(self, title, content, width=150, is_ai=True):
+    def create_chatbox(self, title, content, width=100, is_ai=True):
         """Create a chatbox panel."""
+        content = Text(content, no_wrap=False)
         if not is_ai:
             chatbox = Panel.fit(content, width=width,
                                 title=title, border_style="blue")
@@ -46,7 +48,7 @@ class PanelBase:
     def print_stdout(self):
         """Print the panel."""
         if self._queue.size() > 0:
-            self.console.print(self._create_base_panel())
+            self.console.print(self._create_base_panel(), soft_wrap=True)
 
 
 class Queue:
@@ -77,9 +79,9 @@ class Queue:
 if __name__ == "__main__":
     panel = PanelBase("Chat Panel", width=70)
     while True:
-        user = input("User: ")
+        user = panel.console.input("User: ")
         panel.create_chatbox("User", user, is_ai=False)
         panel.print_stdout()
-        ai = input("AI: ")
+        ai = panel.console.input("AI: ")
         panel.create_chatbox("AI", ai)
         panel.print_stdout()
