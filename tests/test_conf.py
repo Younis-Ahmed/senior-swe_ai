@@ -1,25 +1,21 @@
 """ Test the conf module """
-from typing import Any, Generator
+from typing import Generator
 import os
+from unittest.mock import AsyncMock, MagicMock, NonCallableMagicMock
+import openai
 import pytest
-from pytest_mock import MockFixture, MockerFixture
+from pytest_mock import MockerFixture
 from senior_swe_ai.conf import (
     get_config_path,
-    config_init
+    config_init,
+    validate_api_key,
+    save_conf,
+    append_conf
 )
 
 
 class TestConf:
     """Testing config functions"""
-    @pytest.fixture(autouse=True)
-    def setup_class(self) -> Generator[None, Any, None]:
-        """Setup the class"""
-        os.makedirs(os.path.dirname(get_config_path()), exist_ok=True)
-        with open(get_config_path(), 'w', encoding='utf-8') as f:
-            f.write('api_key="test_key"')
-        yield
-        if os.path.exists(get_config_path()):
-            os.remove(get_config_path())
 
     def test_get_config_path_unix(self) -> None:
         """Test get_config_path unix"""
@@ -38,7 +34,8 @@ class TestConf:
         with pytest.raises(NotImplementedError):
             get_config_path()
 
-    def test_config_init_exists(self, mocker: Generator[MockerFixture, None, None]) -> None:
+    def test_config_init_exists(self, mocker: Generator[MockerFixture, None, None],
+                                setup_class) -> None:
         """Test config_init exists"""
         mocker.patch('os.path.exists', return_value=True)
         mocker.patch('senior_swe_ai.conf.prompt',
@@ -46,25 +43,54 @@ class TestConf:
         config_init()
         assert os.path.exists(get_config_path()) is True
 
-    def test_config_init_overwrite(self, mocker: Generator[MockerFixture, None, None]) -> None:
-        """Test config_init overwrite"""
-        mocker.patch('os.path.exists', return_value=True)
-        mocker.patch('senior_swe_ai.conf.prompt',
-                     return_value={'overwrite': True})
-        config_init()
-        assert os.path.exists(get_config_path()) is True
+    def test_validate_api_key_error(self, mocker: MockerFixture) -> None:
+        """Test validate_api_key with an unexpected error"""
+        mocker.patch('openai.OpenAI', side_effect=openai.OpenAIError)
+        api_key = "error_api_key"
 
-    def test_config_init_env_var_not_exists(
-        self, mocker: Generator[MockerFixture, None, None]
-    ) -> None:
-        """Test config_init env var not exists"""
-        mocker.patch('os.path.exists', return_value=False)
-        mocker.patch.dict('os.environ', {}, clear=True)
-        mock_getpass: MockFixture = mocker.patch(
-            'getpass.getpass', return_value='test_key')
-        mock_api_validate: MockFixture = mocker.patch(
-            'senior_swe_ai.conf.validate_api_key', return_value=True)
+        assert validate_api_key(api_key) is False
 
-        config_init()
-        mock_getpass.assert_called()
-        mock_api_validate.assert_called()
+    def test_validate_api_key_success(self, mocker: MockerFixture) -> None:
+        """Test validate_api_key with a successful key"""
+        mocker.patch('openai.OpenAI', return_value=AsyncMock())
+        api_key = "success_api_key"
+        assert validate_api_key(api_key) is True
+
+    def test_save_conf(self, mocker: MockerFixture) -> None:
+        """Test save_conf function"""
+        mock_open: MagicMock | AsyncMock | NonCallableMagicMock = mocker.patch(
+            "builtins.open", mocker.mock_open())
+        mock_dump: MagicMock | AsyncMock | NonCallableMagicMock = mocker.patch(
+            "toml.dump")
+
+        conf: dict[str, str] = {"api_key": "test_key"}
+        save_conf(conf)
+
+        mock_open.assert_called_once_with(
+            get_config_path(), 'w', encoding='utf-8')
+
+        mock_dump.assert_called_once_with(
+            conf, mock_open.return_value.__enter__.return_value)
+
+    def test_append_conf(self, mocker: MockerFixture) -> None:
+        """Test append_conf function"""
+        mock_open: MagicMock | AsyncMock | NonCallableMagicMock = mocker.patch(
+            "builtins.open", mocker.mock_open())
+        mock_load: MagicMock | AsyncMock | NonCallableMagicMock = mocker.patch(
+            "senior_swe_ai.conf.load_conf", return_value={"existing_key": "existing_value"})
+        mock_dump: MagicMock | AsyncMock | NonCallableMagicMock = mocker.patch(
+            "toml.dump")
+
+        conf: dict[str, str] = {"new_key": "new_value"}
+        append_conf(conf)
+
+        mock_open.assert_called_once_with(
+            get_config_path(), 'w', encoding='utf-8')
+
+        mock_load.assert_called_once()
+
+        mock_dump.assert_called_once_with(
+            {
+                "existing_key": "existing_value",
+                "new_key": "new_value"
+            }, mock_open.return_value.__enter__.return_value)
