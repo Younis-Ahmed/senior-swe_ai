@@ -16,9 +16,9 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - name: Install dependencies
@@ -29,7 +29,7 @@ jobs:
       run: |
         mkdir -p tests-results/linting
         pylint $(git ls-files '*.py' | grep -v 'tests/') | tee tests-results/linting/pylint.log
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: pylint-logs
@@ -43,9 +43,9 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - uses: Gr1N/setup-poetry@v8
@@ -55,7 +55,7 @@ jobs:
     - name: Run tests
       run: |
         poetry run pytest --junitxml=tests-results/pytest/test-report.xml
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: test-results
@@ -69,9 +69,9 @@ jobs:
       matrix:
         python-version: ["3.9", "3.10", "3.11"]
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: ${{ matrix.python-version }}
     - uses: Gr1N/setup-poetry@v8
@@ -81,7 +81,7 @@ jobs:
     - name: Run coverage
       run: |
         poetry run pytest --cov=senior_swe_ai --cov-report=xml --cov-report=html
-    - uses: actions/upload-artifact@v2
+    - uses: actions/upload-artifact@v4
       if: always()
       with:
         name: coverage-results
