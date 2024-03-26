@@ -8,6 +8,7 @@ from rich.console import Console
 from rich.columns import Columns
 from rich.align import Align
 from rich.text import Text
+from rich.status import Status
 
 
 class PanelBase:
@@ -36,7 +37,7 @@ class PanelBase:
         content = Text(content, overflow="fold")
         if not is_ai:
             chatbox: Panel = Panel.fit(content, width=width,
-                                title=title, border_style="blue", title_align="left")
+                                       title=title, border_style="blue", title_align="left")
             aligned_chatbox: Align = Align.left(chatbox, width=50)
         else:
             chatbox = Panel.fit(content, width=width,
@@ -50,6 +51,10 @@ class PanelBase:
         """Print the panel."""
         if self._queue.size() > 0:
             self.console.print(self._create_base_panel())
+
+    def create_status(self, text: str, spinner: str) -> Status:
+        """Create a status panel."""
+        return Status(text, spinner=spinner)
 
 
 class Queue:
