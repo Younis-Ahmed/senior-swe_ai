@@ -80,12 +80,12 @@ jobs:
         poetry install
     - name: Run coverage
       run: |
-        poetry run pytest --cov=src --cov-report=xml --cov-report=html
+        poetry run pytest --cov=senior_swe_ai --cov-report=xml --cov-report=html
     - uses: actions/upload-artifact@v2
       if: always()
       with:
         name: coverage-results
-        path: src/htmlcov
+        path: coverage.xml
         retention-days: 30
 
     
