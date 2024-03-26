@@ -28,8 +28,7 @@ jobs:
     - name: Analysing the code with pylint
       run: |
         mkdir -p tests-results/linting
-        pylint $(git ls-files '*.py' | grep -v 'tests/') >> tests-results/linting/pylint.log
-        pylint $(git ls-files '*.py' | grep -v 'tests/')
+        pylint $(git ls-files '*.py' | grep -v 'tests/') | tee tests-results/linting/pylint.log
     - uses: actions/upload-artifact@v2
       if: always()
       with:
