@@ -16,6 +16,7 @@ from senior_swe_ai.git_process import (
 )
 from senior_swe_ai.conf import config_init, load_conf, append_conf
 from senior_swe_ai.cache import create_cache_dir, get_cache_path, save_vec_cache
+from senior_swe_ai.panel import PanelBase
 from senior_swe_ai.vec_store import VectorStore
 from senior_swe_ai.consts import FaissModel, faiss_installed
 
@@ -116,10 +117,17 @@ def main() -> None:
 
     try:
         continue_chat = True
+        panel = PanelBase(repo_name, width=70)
         while continue_chat:
-            question: str = input(conf['username'] + ': ')
+            question: str = panel.console.input(conf['username'] + ': ')
+            panel.create_chatbox(conf['username'], question, is_ai=False)
+            panel.console.clear()
+            panel.print_stdout()
             answer = qa(question)
-            print(repo_name + ': ' + answer['answer'])
+            panel.create_chatbox(repo_name, answer['answer'])
+            panel.console.clear()
+            panel.print_stdout()
+            # print(repo_name + ': ' + answer['answer'])
 
             choice: str = (
                 input(
