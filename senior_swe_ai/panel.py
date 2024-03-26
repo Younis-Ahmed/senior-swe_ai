@@ -79,10 +79,14 @@ class Queue:
 
 if __name__ == "__main__":
     panel = PanelBase("Chat Panel", width=70)
+
     while True:
         user = panel.console.input("User: ")
         panel.create_chatbox("User", user, is_ai=False)
+        panel.console.clear()
         panel.print_stdout()
         ai = panel.console.input("AI: ")
         panel.create_chatbox("AI", ai)
+        panel.console.clear()
+
         panel.print_stdout()
