@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 """ SeniorSWE cli tool utilize AI to help you with your project """
 from argparse import ArgumentParser, Namespace
 import os
