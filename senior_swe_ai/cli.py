@@ -147,6 +147,8 @@ def main() -> None:
                 continue_chat = False
     except KeyboardInterrupt:
         print('\n✌')
+    except EOFError:
+        print('\n✌')
 
 
 if __name__ == '__main__':
