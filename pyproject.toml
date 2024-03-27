@@ -20,6 +20,7 @@ langchain-openai = "^0.0.8"
 tiktoken = "^0.6.0"
 rich = "^13.7.1"
 altair = "^5.2.0"
+chardet = "^5.2.0"
 
 
 [tool.poetry.group.dev.dependencies]
