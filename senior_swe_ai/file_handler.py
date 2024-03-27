@@ -1,6 +1,7 @@
 """Module for handling file I/O operations"""
-import os
 from typing import List, Optional, Tuple
+import os
+import chardet
 
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -39,13 +40,22 @@ def parse_code_files(code_files: list[str]) -> list[Document]:
 
 def read_file_and_get_metadata(code_file: str) -> Tuple[bytes, str, Optional[Language]]:
     """Read the file and get the metadata"""
-    with open(code_file, "r", encoding="utf-8") as file:
-        file_bytes: bytes = file.read().encode()
-        commit_hash: str = get_hash(code_file)
+    try:
+        with open(code_file, "r", encoding="utf-8") as file:
+            file_bytes: bytes = file.read().encode()
+    except UnicodeDecodeError:
+        with open(code_file, "rb") as file:
+            rawdata = file.read()
+            result = chardet.detect(rawdata)
+            encoding = result['encoding']
 
-        file_extension: str = get_extension(code_file)
-        programming_language: Language | None = get_langchain_text_splitters(
-            file_extension)
+            with open(code_file, "r", encoding=encoding) as file:
+                file_bytes: bytes = file.read().encode()
+
+    commit_hash: str = get_hash(code_file)
+    file_extension: str = get_extension(code_file)
+    programming_language: Language | None = get_langchain_text_splitters(
+        file_extension)
 
     return file_bytes, commit_hash, programming_language, file_extension
 
