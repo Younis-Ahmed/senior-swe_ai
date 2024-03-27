@@ -37,4 +37,4 @@ build-backend = "poetry.core.masonry.api"
 
 
 [tool.poetry.scripts]
-senior-swe-ai = "senior_swe_ai.cli:main"
+sen-ai = "senior_swe_ai.cli:main"
