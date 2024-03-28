@@ -37,5 +37,6 @@ build-backend = "poetry.core.masonry.api"
 "Repository" = "https://github.com/Younis-Ahmed/senior-swe-ai"
 
 
+
 [tool.poetry.scripts]
 sen-ai = "senior_swe_ai.cli:main"
