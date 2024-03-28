@@ -1,4 +1,4 @@
-""" This module contains the BaseTreeParser for JavaScript. """
+""" This module contains the BaseTreeParser for Kotlin. """
 import warnings
 from senior_swe_ai.consts import Language
 from senior_swe_ai.tree_parser.base import BaseTreeParser
