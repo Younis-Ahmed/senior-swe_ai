@@ -119,6 +119,10 @@ def main() -> None:
     try:
         continue_chat = True
         panel = PanelBase(repo_name, width=70)
+        panel.create_chatbox(
+            repo_name, "Hello! I'm Sen-AI, Ask me anything about your codebase.")
+        panel.console.clear()
+        panel.print_stdout()
         while continue_chat:
             question: str = panel.console.input(conf['username'] + ': ')
             panel.create_chatbox(conf['username'], question, is_ai=False)
@@ -132,7 +136,6 @@ def main() -> None:
             panel.create_chatbox(repo_name, answer['answer'])
             panel.console.clear()
             panel.print_stdout()
-            # print(repo_name + ': ' + answer['answer'])
 
             choice: str = (
                 input(
