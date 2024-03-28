@@ -4,6 +4,7 @@ from argparse import ArgumentParser, Namespace
 import os
 import sys
 from typing import List
+import warnings
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains.conversational_retrieval.base import (
     BaseConversationalRetrievalChain, ConversationalRetrievalChain
@@ -108,6 +109,7 @@ def main() -> None:
         save_vec_cache(vec_store.vec_cache, f'{repo_name}.json')
 
     vec_store.load_docs()
+    warnings.simplefilter(action='ignore')
     chat_mdl = ChatOpenAI(model=conf['chat_model'], api_key=conf['api_key'], temperature=0.9,
                           max_tokens=2048)
     mem = ConversationSummaryMemory(
@@ -119,6 +121,10 @@ def main() -> None:
     try:
         continue_chat = True
         panel = PanelBase(repo_name, width=70)
+        panel.create_chatbox(
+            repo_name, "Hello! I'm Sen-AI, Ask me anything about your codebase.")
+        panel.console.clear()
+        panel.print_stdout()
         while continue_chat:
             question: str = panel.console.input(conf['username'] + ': ')
             panel.create_chatbox(conf['username'], question, is_ai=False)
@@ -132,7 +138,6 @@ def main() -> None:
             panel.create_chatbox(repo_name, answer['answer'])
             panel.console.clear()
             panel.print_stdout()
-            # print(repo_name + ': ' + answer['answer'])
 
             choice: str = (
                 input(
