@@ -98,7 +98,7 @@ jobs:
     needs: test
     steps:
     - uses: actions/checkout@v4
-    - name: Build and publish to pypi
+    - name: Build and publish to pypi registry with poetry
       uses: JRubics/poetry-publish@v2.0
       with:
         python_version: "3.9.1"
