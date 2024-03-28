@@ -4,6 +4,7 @@ from argparse import ArgumentParser, Namespace
 import os
 import sys
 from typing import List
+import warnings
 from langchain.memory import ConversationSummaryMemory
 from langchain.chains.conversational_retrieval.base import (
     BaseConversationalRetrievalChain, ConversationalRetrievalChain
@@ -108,6 +109,7 @@ def main() -> None:
         save_vec_cache(vec_store.vec_cache, f'{repo_name}.json')
 
     vec_store.load_docs()
+    warnings.simplefilter(action='ignore')
     chat_mdl = ChatOpenAI(model=conf['chat_model'], api_key=conf['api_key'], temperature=0.9,
                           max_tokens=2048)
     mem = ConversationSummaryMemory(
