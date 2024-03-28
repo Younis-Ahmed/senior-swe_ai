@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "senior-swe-ai"
-version = "0.1.2a1"
+version = "0.1.2"
 description = "SeniorSWE-AI is a command-line interface for in-context embedding that leverages the semantic comprehension capabilities of large language models to analyze the intended codebase and engage in a conversation with it, mimicking the behavior of a seasoned software engineer. "
 authors = ["Younis <23105954+Younis-Ahmed@users.noreply.github.com>"]
 readme = "README.md"
