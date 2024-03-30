@@ -21,6 +21,16 @@ class TreeParseRuby(BaseTreeParser):
         self,
         node: tree_sitter.Node,
     ) -> list:
+        """
+        Recursively query all methods in the tree-sitter parse tree.
+
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            list: A list of method nodes.
+
+        """
         methods = []
         if node.type == self.method_declaration_identifier:
             doc_comment = []
