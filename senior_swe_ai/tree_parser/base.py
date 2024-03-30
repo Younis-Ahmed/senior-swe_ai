@@ -100,6 +100,14 @@ class BaseTreeParser(ABC):
         self,
         node: tree_sitter.Node,
     ) -> list:
+        """
+        Recursively query all methods in the tree-sitter parse tree.
+
+        :param node: The current node in the tree-sitter parse tree.
+        :type node: tree_sitter.Node
+        :return: A list of method nodes.
+        :rtype: list
+        """
         methods = []
         if node.type == self.method_declaration_identifier:
             doc_comment_node = None
@@ -115,6 +123,14 @@ class BaseTreeParser(ABC):
         return methods
 
     def _query_method_name(self, node: tree_sitter.Node) -> str | None:
+        """
+        Query the name of the method from the tree-sitter node.
+
+        :param node: The tree-sitter node representing the method.
+        :type node: tree_sitter.Node
+        :return: The name of the method.
+        :rtype: str | None
+        """
         if node.type == self.method_declaration_identifier:
             for child in node.children:
                 if child.type == self.method_name_identifier:
