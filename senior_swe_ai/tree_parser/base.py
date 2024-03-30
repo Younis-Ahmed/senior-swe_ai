@@ -67,22 +67,24 @@ class BaseTreeParser(ABC):
     def create_treesitter(lang: Language) -> Any:
         """
         Factory method to create a tree-sitter parser for the given language.
-        
-        :param lang: The language for which the parser needs to be created.
-        :type lang: Language
-        :return: The tree-sitter parser object.
-        :rtype: Any
+
+        Args:
+            lang (Language): The language to create the parser for.
+
+        Returns:
+            Any: The tree-sitter parser.
         """
         return TreeParserRegistry.create_treesitter(lang)
 
     def parse(self, file_bytes: bytes) -> list[TreeParserMethodNode]:
         """
         Parse the given file and return a list of method nodes.
-        
-        :param file_bytes: The source code of the file to be parsed.
-        :type file_bytes: bytes
-        :return: A list of method nodes.
-        :rtype: list[TreeParserMethodNode]
+
+        Args:
+            file_bytes (bytes): The file to parse.
+
+        Returns:
+            list[TreeParserMethodNode]: A list of method nodes.
         """
         self.tree = self.parser.parse(file_bytes)
         result = []
@@ -103,10 +105,13 @@ class BaseTreeParser(ABC):
         """
         Recursively query all methods in the tree-sitter parse tree.
 
-        :param node: The current node in the tree-sitter parse tree.
-        :type node: tree_sitter.Node
-        :return: A list of method nodes.
-        :rtype: list
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            list: A list of method nodes.
+
+
         """
         methods = []
         if node.type == self.method_declaration_identifier:
@@ -126,10 +131,12 @@ class BaseTreeParser(ABC):
         """
         Query the name of the method from the tree-sitter node.
 
-        :param node: The tree-sitter node representing the method.
-        :type node: tree_sitter.Node
-        :return: The name of the method.
-        :rtype: str | None
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            str | None: The name of the method if found, None otherwise.
+
         """
         if node.type == self.method_declaration_identifier:
             for child in node.children:
