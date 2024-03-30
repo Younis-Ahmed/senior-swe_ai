@@ -15,6 +15,16 @@ class TreeParserCpp(BaseTreeParser):
             super().__init__(Language.CPP, "function_definition", "identifier", "comment")
 
     def _query_method_name(self, node: tree_sitter.Node) -> str | None:
+        """
+        Query the method name from the tree-sitter node.
+
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            str | None: The method name if found, None otherwise.
+
+        """
         if node.type == self.method_declaration_identifier:
             for child in node.children:
                 # if method returns pointer, skip pointer declarator
