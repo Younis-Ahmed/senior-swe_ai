@@ -19,6 +19,15 @@ class TreeParsePy(BaseTreeParser):
             )
 
     def parse(self, file_bytes: bytes) -> list[TreeParserMethodNode]:
+        """
+        Parse the Python code using the tree-sitter library.
+
+        Args:
+            file_bytes (bytes): The Python code in bytes.
+
+        Returns:
+            list[TreeParserMethodNode]: A list of method nodes.
+        """
         self.tree = self.parser.parse(file_bytes)
         result = []
         methods: list = self._query_all_methods(self.tree.root_node)
@@ -30,6 +39,15 @@ class TreeParsePy(BaseTreeParser):
         return result
 
     def _query_method_name(self, node: tree_sitter.Node) -> str | None:
+        """
+        Query the method name from the tree-sitter node.
+
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            str | None: The method name if found, None otherwise.
+        """
         if node.type == self.method_declaration_identifier:
             for child in node.children:
                 if child.type == self.method_name_identifier:
