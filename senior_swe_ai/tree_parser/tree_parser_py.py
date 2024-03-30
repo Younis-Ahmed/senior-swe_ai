@@ -55,6 +55,15 @@ class TreeParsePy(BaseTreeParser):
         return None
 
     def _query_all_methods(self, node: tree_sitter.Node) -> list:
+        """
+        Recursively query all methods in the tree-sitter parse tree.
+
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            list: A list of method nodes.
+        """
         methods = []
         for child in node.children:
             if child.type == self.method_declaration_identifier:
@@ -67,6 +76,15 @@ class TreeParsePy(BaseTreeParser):
         return methods
 
     def _query_doc_comment(self, node: tree_sitter.Node) -> str | None:
+        """
+        Query the documentation comment from the tree-sitter node.
+
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            str | None: The documentation comment if found, None otherwise.
+        """
         query_code = """
             (function_definition
                 body: (block . (expression_statement (string)) @function_doc_str))
