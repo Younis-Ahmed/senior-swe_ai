@@ -12,7 +12,16 @@ from senior_swe_ai.tree_parser.tree_parser_registry import TreeParserRegistry
 
 @dataclass
 class TreeParserMethodNode:
-    """Class to represent a method node in the tree-sitter parse tree."""
+    """
+    Class to represent a method node in the tree-sitter parse tree.
+
+    Attributes:
+        name (str | bytes | None): The name of the method.
+        doc_comment (str | None): The documentation comment for the method.
+        method_source_code (str): The source code of the method.
+        node (tree_sitter.Node): The tree-sitter node representing the method.
+
+    """
 
     def __init__(
         self,
@@ -28,7 +37,17 @@ class TreeParserMethodNode:
 
 
 class BaseTreeParser(ABC):
-    """ Base class for tree-sitter parsers."""
+    """
+    Base class for tree-sitter parsers.
+
+    Attributes:
+        parser (tree_sitter.Parser): The tree-sitter parser.
+        language (tree_sitter.Language): The tree-sitter language.
+        method_declaration_identifier (str): The tree-sitter node type for method declarations.
+        method_name_identifier (str): The tree-sitter node type for method names.
+        doc_comment_identifier (str): The tree-sitter node type for documentation comments.
+        tree (tree_sitter.Tree | None): The tree-sitter parse tree.
+    """
 
     def __init__(
         self,
@@ -46,11 +65,25 @@ class BaseTreeParser(ABC):
 
     @staticmethod
     def create_treesitter(lang: Language) -> Any:
-        """Factory method to create a tree-sitter parser for the given language."""
+        """
+        Factory method to create a tree-sitter parser for the given language.
+        
+        :param lang: The language for which the parser needs to be created.
+        :type lang: Language
+        :return: The tree-sitter parser object.
+        :rtype: Any
+        """
         return TreeParserRegistry.create_treesitter(lang)
 
     def parse(self, file_bytes: bytes) -> list[TreeParserMethodNode]:
-        """Parse the given file and return a list of method nodes."""
+        """
+        Parse the given file and return a list of method nodes.
+        
+        :param file_bytes: The source code of the file to be parsed.
+        :type file_bytes: bytes
+        :return: A list of method nodes.
+        :rtype: list[TreeParserMethodNode]
+        """
         self.tree = self.parser.parse(file_bytes)
         result = []
         methods = self._query_all_methods(self.tree.root_node)
