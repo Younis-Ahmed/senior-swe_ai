@@ -1,5 +1,6 @@
 """This module contains the TreeParserCsharp class, which is responsible 
 for parsing C# code using the tree-sitter library."""
+from typing import Literal
 import warnings
 import tree_sitter
 from senior_swe_ai.consts import Language
@@ -18,6 +19,16 @@ class TreeParserCsharp(BaseTreeParser):
             )
 
     def _query_method_name(self, node: tree_sitter.Node) -> str | None:
+        """
+        Query the method name from the tree-sitter node.
+
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            str | None: The method name if found, None otherwise.
+
+        """
         first_match = None
         if node.type == self.method_declaration_identifier:
             for child in node.children:
@@ -28,6 +39,17 @@ class TreeParserCsharp(BaseTreeParser):
         return first_match
 
     def _query_all_methods(self, node: tree_sitter.Node) -> list:
+        """
+        Recursively query all methods in the tree-sitter parse tree.
+
+        Args:
+            node (tree_sitter.Node): The tree-sitter node.
+
+        Returns:
+            list: A list of method nodes.
+
+
+        """
         methods = []
         if node.type == self.method_declaration_identifier:
             doc_comment_nodes = []
@@ -49,7 +71,7 @@ class TreeParserCsharp(BaseTreeParser):
                     else:
                         current_doc_comment_node = None
 
-            doc_comment_str = ""
+            doc_comment_str: Literal[''] = ""
             doc_comment_nodes.reverse()
             for doc_comment_node in doc_comment_nodes:
                 doc_comment_str += doc_comment_node + "\n"
