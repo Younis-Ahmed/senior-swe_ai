@@ -10,7 +10,15 @@ from altair import Self
 
 
 class VectorCache:
-    """ VectorCache class for storing vector data """
+    """ 
+    VectorCache class for storing vector data 
+
+    Attributes:
+    filename: str - The name of the file
+    vector_ids: list[str] - The list of vector ids
+    commit_hash: str - The commit hash of the file
+
+    """
 
     def __init__(self, filename, vec_ids, commit_hash) -> None:
         self.filename = filename
@@ -27,7 +35,15 @@ class VectorCache:
 
     @classmethod
     def from_json(cls, data: dict[str, str]) -> Self:
-        """Create a VectorCache object from json"""
+        """
+        Create a VectorCache object from json
+
+        Args:
+            data: dict[str, str] - The data to create the object
+
+        Returns:
+            VectorCache - The created VectorCache object
+        """
         return cls(
             filename=data.get("filename"),
             vec_ids=data.get("vector_ids"),
@@ -36,7 +52,12 @@ class VectorCache:
 
 
 def get_cache_path() -> str:
-    """Get the cache directory path for the application."""
+    """
+    Get the cache directory path for the application.
+
+    Returns:
+        str - The cache directory path
+    """
     system: str = platform.system()
 
     if system in ('Linux', 'Darwin'):
@@ -53,14 +74,27 @@ def get_cache_path() -> str:
 
 
 def create_cache_dir() -> None:
-    """Create the cache directory for the application."""
+    """
+    Create the cache directory for the application.
+
+    Returns:
+        None
+    """
     if not os.path.exists(get_cache_path()):
         path = Path(get_cache_path())
         path.mkdir(parents=True, exist_ok=True)
 
 
 def load_vec_cache(filename: str) -> dict[str, VectorCache]:
-    """Load the vector cache from the given file."""
+    """
+    Load the vector cache from the given file.
+
+    Args:
+        filename: str - The name of the file
+
+    Returns:
+        dict[str, VectorCache] - The vector cache
+    """
     with open(get_cache_path() + f'/{filename}', 'r', encoding='utf-8') as f:
         vec = json.load(f)
     vec_cache = {}
@@ -70,7 +104,16 @@ def load_vec_cache(filename: str) -> dict[str, VectorCache]:
 
 
 def save_vec_cache(vector_cache, filename) -> None:
-    """Save the vector cache to the given file."""
+    """
+    Save the vector cache to the given file.
+
+    Args:
+        vector_cache: dict[str, VectorCache] - The vector cache
+        filename: str - The name of the file
+
+    Returns:
+        None
+    """
     with open(
         get_cache_path() + "/" + filename, "w", encoding="utf-8"
     ) as vector_cache_file:
