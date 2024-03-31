@@ -10,7 +10,12 @@ from senior_swe_ai.consts import EmbeddingsModel
 
 
 def get_config_path() -> str:
-    """ Get the configuration file path """
+    """ 
+    Get the configuration file path 
+
+    Returns:
+        str - The configuration file path
+    """
     sys: str = platform.system()
 
     if sys in ('Linux', 'Darwin'):
@@ -25,7 +30,15 @@ def get_config_path() -> str:
 
 
 def config_init() -> None:
-    """ Initialize the app """
+    """
+      Initialize the app
+
+    This function initializes the app by creating the configuration file
+    and saving the OpenAI API key and the user's username.
+
+    Returns:
+        None
+    """
 
     conf_file_path: str = get_config_path()
 
@@ -79,7 +92,15 @@ def config_init() -> None:
 
 
 def validate_api_key(api_key: str) -> bool:
-    """ Validate the OpenAI API key"""
+    """ 
+    Validate the OpenAI API key
+    
+    Args:
+        api_key: str - The OpenAI API key
+
+    Returns:
+        bool - True if the API key is valid, False otherwise
+    """
 
     try:
         # Make a simple request to the API
@@ -100,7 +121,15 @@ def validate_api_key(api_key: str) -> bool:
 
 
 def save_conf(conf) -> None:
-    """ Save the configuration to the file """
+    """
+    Save the configuration to the file 
+    
+    Args:
+        conf: dict[str, str] - The configuration
+
+    Returns:
+        None
+    """
     conf_file_path: str = get_config_path()
     with open(conf_file_path, 'w', encoding='utf-8') as conf_file:
         toml.dump(conf, conf_file)
