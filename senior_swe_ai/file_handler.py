@@ -12,7 +12,15 @@ from senior_swe_ai.tree_parser.base import BaseTreeParser, TreeParserMethodNode
 
 
 def get_extension(file_path: str) -> str:
-    """Get the file extension from the file path"""
+    """
+    Get the file extension from the file path
+    
+    Args:
+        file_path: str - The file path
+
+    Returns:
+        str - The file extension
+    """
     return '.' + file_path.split('.')[-1]
 
 
