@@ -43,7 +43,12 @@ def get_repo_name() -> str:
 
 
 def recursive_load_files() -> list[str]:
-    """ Load all files in the git repository """
+    """ 
+    Load all files in the git repository 
+
+    Returns:
+        list[str]: The list of files in the git repository
+    """
     git_root: str = get_repo_root()
     file_list: list = []
 
