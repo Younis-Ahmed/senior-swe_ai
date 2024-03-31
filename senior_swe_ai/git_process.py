@@ -7,7 +7,7 @@ from senior_swe_ai.consts import EXCLUDE_DIRS, EXCLUDE_FILES, INCLUDE_FILES
 def is_git_repo() -> bool:
     """
     Check if the current directory is a git repository
-    
+
     Returns:
         bool: True if the current directory is a git repository, False otherwise.
     """
@@ -19,14 +19,24 @@ def is_git_repo() -> bool:
 
 
 def get_repo_root() -> str:
-    """ Get the root directory of the git repository """
+    """ 
+    Get the root directory of the git repository 
+
+    Returns:
+        str: The root directory of the git repository
+    """
     return subprocess.run(
         ["git", "rev-parse", "--show-toplevel"], capture_output=True, check=True, text=True
     ).stdout.strip()
 
 
 def get_repo_name() -> str:
-    """ Get the name of the git repository """
+    """
+    Get the name of the git repository
+
+    Returns:
+        str: The name of the git repository
+    """
     return subprocess.run(
         ["git", "rev-parse", "--show-toplevel"], capture_output=True, check=True, text=True
     ).stdout.strip().split('/')[-1]
@@ -47,6 +57,7 @@ def recursive_load_files() -> list[str]:
                     file_list.append(os.path.join(root, file))
 
     return file_list
+
 
 def get_hash(file_path: str) -> str:
     """ Get the hash of the file """
