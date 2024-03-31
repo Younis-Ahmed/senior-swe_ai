@@ -130,7 +130,7 @@ def create_documents_from_nodes(
     """
     documents: list = []
     for node in treesitter_nodes:
-        method_source_code = node.method_source_code
+        method_source_code: str = node.method_source_code
         filename: str = os.path.basename(code_file)
 
         if node.doc_comment and programming_language != Language.PYTHON:
