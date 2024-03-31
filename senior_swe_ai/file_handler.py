@@ -89,7 +89,16 @@ def parse_file_with_treesitter(
         file_bytes: bytes,
         programming_language: Language
 ) -> list[TreeParserMethodNode]:
-    """Parse the file using BaseTreeParser and return the method nodes"""
+    """
+    Parse the file using BaseTreeParser and return the method nodes
+    
+    Args:
+        file_bytes: bytes - The file bytes
+        programming_language: Language - The programming language
+
+    Returns:
+        list[TreeParserMethodNode] - The list of method nodes
+    """
     treesitter_parser = BaseTreeParser.create_treesitter(programming_language)
     treesitter_nodes: list[TreeParserMethodNode] = treesitter_parser.parse(
         file_bytes)
