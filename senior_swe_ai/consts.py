@@ -144,7 +144,12 @@ INCLUDE_FILES: list[str] = [
 
 
 def faiss_installed() -> bool:
-    """Check if faiss is installed."""
+    """
+    Check if faiss is installed.
+    
+    Returns:
+        bool: True if faiss is installed, False otherwise.
+    """
     for pack in FaissModel:
         try:
             distribution(pack.value)
