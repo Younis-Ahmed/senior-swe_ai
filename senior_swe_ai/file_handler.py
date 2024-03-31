@@ -14,7 +14,7 @@ from senior_swe_ai.tree_parser.base import BaseTreeParser, TreeParserMethodNode
 def get_extension(file_path: str) -> str:
     """
     Get the file extension from the file path
-    
+
     Args:
         file_path: str - The file path
 
@@ -25,7 +25,15 @@ def get_extension(file_path: str) -> str:
 
 
 def parse_code_files(code_files: list[str]) -> list[Document]:
-    """Parse the given code files and return a list of Documents"""
+    """
+    Parse the given code files and return a list of Documents
+
+    Args:
+        code_files: list[str] - The list of code files
+
+    Returns:
+        list[Document] - The list of Documents
+    """
     documents: list = []
     for code_file in code_files:
         file_bytes, commit_hash, programming_language, file_extension = read_file_and_get_metadata(
