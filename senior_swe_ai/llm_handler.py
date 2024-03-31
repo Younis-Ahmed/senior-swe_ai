@@ -6,7 +6,16 @@ from senior_swe_ai.consts import Language
 
 
 def get_langchain_text_splitters(language: Language) -> Language | None:
-    """Get the Langchain text splitters for the given language"""
+    """
+    Get the Langchain text splitters for the given language
+
+    Args:
+        language: Language - The language
+
+    Returns:
+        Language | None - The Langchain text splitter
+
+    """
 
     lang_map: dict[str, Language] = {
         ".py": Language.PYTHON,
@@ -30,7 +39,15 @@ def get_langchain_text_splitters(language: Language) -> Language | None:
 
 
 def get_langchain_language(language: Language) -> text_splitter.Language | None:
-    """Get the Langchain language for the given language"""
+    """
+    Get the Langchain language for the given language
+    
+    Args:
+        language: Language - The language
+
+    Returns:
+        text_splitter.Language | None - The Langchain language
+    """
     lang_map: dict[Language, text_splitter.Language] = {
         Language.PYTHON: text_splitter.Language.PYTHON,
         Language.JAVASCRIPT: text_splitter.Language.JS,
