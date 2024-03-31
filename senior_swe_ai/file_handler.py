@@ -158,7 +158,15 @@ def create_documents_from_nodes(
 
 
 def create_character_text_splitter(language: Language) -> RecursiveCharacterTextSplitter:
-    """Create a RecursiveCharacterTextSplitter for the given language"""
+    """
+    Create a RecursiveCharacterTextSplitter for the given language
+    
+    Args:
+        language: Language - The programming language
+
+    Returns:
+        RecursiveCharacterTextSplitter - The RecursiveCharacterTextSplitter
+    """
     langchain_language: Language | None = get_langchain_language(language)
     if langchain_language:
         return RecursiveCharacterTextSplitter.from_language(
