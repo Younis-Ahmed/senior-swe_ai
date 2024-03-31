@@ -5,7 +5,12 @@ from senior_swe_ai.consts import EXCLUDE_DIRS, EXCLUDE_FILES, INCLUDE_FILES
 
 
 def is_git_repo() -> bool:
-    """ Check if the current directory is a git repository """
+    """
+    Check if the current directory is a git repository
+    
+    Returns:
+        bool: True if the current directory is a git repository, False otherwise.
+    """
     if not subprocess.run(
         ["git", "rev-parse", "--is-inside-work-tree"], capture_output=True, check=True
     ).stdout:
