@@ -55,15 +55,24 @@ def parse_code_files(code_files: list[str]) -> list[Document]:
 
 
 def read_file_and_get_metadata(code_file: str) -> Tuple[bytes, str, Optional[Language]]:
-    """Read the file and get the metadata"""
+    """
+    Read the file and get the metadata
+
+    Args:
+        code_file: str - The code file path
+
+    Returns:
+        Tuple[bytes, str, Optional[Language]] - The file bytes, commit hash, programming language
+
+    """
     try:
         with open(code_file, "r", encoding="utf-8") as file:
             file_bytes: bytes = file.read().encode()
     except UnicodeDecodeError:
         with open(code_file, "rb") as file:
-            rawdata = file.read()
-            result = chardet.detect(rawdata)
-            encoding = result['encoding']
+            rawdata: bytes = file.read()
+            result: chardet.ResultDict = chardet.detect(rawdata)
+            encoding: str | None = result['encoding']
 
             with open(code_file, "r", encoding=encoding) as file:
                 file_bytes: bytes = file.read().encode()
