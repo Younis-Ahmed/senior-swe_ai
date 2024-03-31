@@ -136,7 +136,15 @@ def save_conf(conf) -> None:
 
 
 def append_conf(conf: dict[Any, Any]) -> None:
-    """ Append the configuration to the file """
+    """
+    Append the configuration to the file
+    
+    Args:
+        conf: dict[str, str] - The configuration
+
+    Returns:
+        None
+    """
     conf_file_path: str = get_config_path()
     conf_item: dict[Any, Any] = load_conf()
 
