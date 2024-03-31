@@ -91,7 +91,7 @@ def parse_file_with_treesitter(
 ) -> list[TreeParserMethodNode]:
     """
     Parse the file using BaseTreeParser and return the method nodes
-    
+
     Args:
         file_bytes: bytes - The file bytes
         programming_language: Language - The programming language
@@ -114,7 +114,20 @@ def create_documents_from_nodes(
         programming_language: Language,
         extension: str
 ) -> list[Document]:
-    """Create documents from the BaseTreeParser nodes and return them as a list"""
+    """
+    Create documents from the BaseTreeParser nodes and return them as a list
+
+    Args:
+        treesitter_nodes: list[TreeParserMethodNode] - The list of method nodes
+        code_file: str - The code file path
+        commit_hash: str - The commit hash
+        code_splitter: RecursiveCharacterTextSplitter - The text splitter
+        programming_language: Language - The programming language
+        extension: str - The file extension
+
+    Returns:
+        list[Document] - The list of Documents
+    """
     documents: list = []
     for node in treesitter_nodes:
         method_source_code = node.method_source_code
