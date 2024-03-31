@@ -157,7 +157,12 @@ def append_conf(conf: dict[Any, Any]) -> None:
 
 
 def load_conf() -> dict[Any, Any]:
-    """ Load the configuration from the file """
+    """
+    Load the configuration from the file 
+    
+    Returns:
+        dict[str, str] - The configuration
+    """
     conf_file_path: str = get_config_path()
     try:
         with open(conf_file_path, 'r', encoding='utf-8') as conf_file:
