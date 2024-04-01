@@ -98,7 +98,25 @@ jobs:
     needs: test
     steps:
     - uses: actions/checkout@v4
+    - uses: actions/setup-python@v5
+      with:
+        python-version: "3.9"
+    - uses: Gr1N/setup-poetry@v9
+    - name: Install dependencies
+      run: |
+        poetry install
+    - name: Check version
+      id: check_version
+      run: |
+        CURRENT_VERSION=$(curl -s https://pypi.org/pypi/senior-swe-ai/json | grep -o '"version":"[^"]\+"' | cut -d':' -f2 | tr -d ' "')
+        NEW_VERSION=$(poetry version -s)
+        if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
+          echo "Version $NEW_VERSION is already published. Please update the version in pyproject.toml."
+          echo "::set-output name=skip_publish::true"
+        fi
+      
     - name: Build and publish to pypi registry with poetry
+      if: steps.check_version.outputs.skip_publish != 'true'
       uses: JRubics/poetry-publish@v2.0
       with:
         python_version: "3.9.1"
