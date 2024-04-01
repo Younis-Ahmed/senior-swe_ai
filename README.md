@@ -10,7 +10,7 @@ Before you begin, ensure you have met the following requirements:
 - `git` is used as a version control for intended codebase
 
 ## Installation
-1. Clone the repository:
+1. Install Package:
     ```shell
     pipx install senior-swe-ai
     ```
