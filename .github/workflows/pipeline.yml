@@ -112,7 +112,7 @@ jobs:
         NEW_VERSION=$(poetry version -s)
         if [ "$CURRENT_VERSION" == "$NEW_VERSION" ]; then
           echo "Version $NEW_VERSION is already published. Please update the version in pyproject.toml."
-          echo "::set-output name=skip_publish::true"
+          echo "name=skip_publish=true" >> $GITHUB_ENV
         fi
       
     - name: Build and publish to pypi registry with poetry
