@@ -3,6 +3,8 @@
 SeniorSWE-AI is a command-line interface for in-context embedding that leverages the semantic comprehension capabilities of large language models to analyze the intended codebase and engage in a conversation with it, mimicking the behavior of a seasoned software engineer.
 
 [![Python CI/CD Pipeline](https://github.com/Younis-Ahmed/senior-swe_ai/actions/workflows/pipeline.yml/badge.svg)](https://github.com/Younis-Ahmed/senior-swe_ai/actions/workflows/pipeline.yml)
+https://github.com/Younis-Ahmed/senior-swe_ai/assets/23105954/a1d48642-4d12-4d63-a741-260c5e948da2
+
 ## Prerequisites
 Before you begin, ensure you have met the following requirements:
 - Python >=3.9.1 < 3.12
